@@ -1,0 +1,5 @@
+---
+telegraf_influxdb_url: http://localhost:8086
+telegraf_influxdb_dbname: telegraf
+telegraf_influxdb_username: telegraf
+telegraf_influxdb_password: telegraf

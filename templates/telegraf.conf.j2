@@ -1,0 +1,71 @@
+[global_tags]
+  {% if telegraf_agent_tags is defined and telegraf_agent_tags is iterable %}
+  {% for item in telegraf_agent_tags %}
+      {{ item.tag_name }} = "{{ item.tag_value }}"
+  {% endfor %}
+  {% endif %}
+
+[agent]
+  interval = "10s"
+  round_interval = true
+  metric_batch_size = 1000
+  metric_buffer_limit = 10000
+  collection_jitter = "0s"
+  flush_interval = "10s"
+  flush_jitter = "0s"
+  precision = ""
+  debug = false
+  quiet = false
+  hostname = ""
+  omit_hostname = false
+
+[[outputs.influxdb]]
+  urls = ["{{ telegraf_influxdb_url }}"] # required
+  database = "{{ telegraf_influxdb_dbname }}" # required
+  retention_policy = ""
+  write_consistency = "any"
+  timeout = "5s"
+
+  username = "{{ telegraf_influxdb_username }}"
+  password = "{{ telegraf_influxdb_password }}"
+
+[[inputs.cpu]]
+  ## Whether to report per-cpu stats or not
+  percpu = true
+  ## Whether to report total system cpu stats or not
+  totalcpu = true
+  ## If true, collect raw CPU time metrics.
+  #fielddrop = ["time_*"] #collect_cpu_time = false
+
+# Read metrics about disk usage by mount point
+[[inputs.disk]]
+  ## By default, telegraf gather stats for all mountpoints.
+  ## Setting mountpoints will restrict the stats to the specified mountpoints.
+  # mount_points = ["/"]
+
+  ## Ignore some mountpoints by filesystem type. For example (dev)tmpfs (usually
+  ## present on /run, /var/run, /dev/shm or /dev).
+  ignore_fs = ["tmpfs", "devtmpfs"]
+
+# Read metrics about disk IO by device
+[[inputs.diskio]]
+  ## By default, telegraf will gather stats for all devices including
+  ## disk partitions.
+  ## Setting devices will restrict the stats to the specified devices.
+  # devices = ["sda", "sdb"]
+  ## Uncomment the following line if you need disk serial numbers.
+  # skip_serial_number = false
+
+# Get kernel statistics from /proc/stat
+[[inputs.kernel]]
+  # no configuration
+[[inputs.mem]]
+  # no configuration
+[[inputs.processes]]
+  # no configuration
+[[inputs.swap]]
+  # no configuration
+[[inputs.system]]
+  # no configuration
+[[inputs.net]]
+interfaces = ["eth0"]
